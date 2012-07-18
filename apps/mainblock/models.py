@@ -13,10 +13,9 @@ def file_path_countryImage(instance, filename):
 class Country(models.Model):
     title = models.CharField(verbose_name = u'название', max_length = 100)
     image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_countryImage)
-    image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True,)
-    image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7)
-    interesting_facts = models.TextField(verbose_name = u'интересные факты', blank=True,)
-    interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7)
+    image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
+    image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
+    interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста итересных фактов', max_length = 7, blank=True)
     map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_countryImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
     map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50)
@@ -38,6 +37,9 @@ class Country(models.Model):
 
     def get_additional_images(self):
         return self.countryimage_set.all()
+
+    def get_facts(self):
+        return self.fact_country.all()
 
 class CountryImage(models.Model):
     country = models.ForeignKey(Country, verbose_name=u'страна')
@@ -74,10 +76,9 @@ class Hotel(models.Model):
     country = models.ForeignKey(Country, verbose_name=u'страна')
     title = models.CharField(verbose_name = u'название', max_length = 100)
     image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_hotelImage)
-    image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True,)
-    image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7)
-    interesting_facts = models.TextField(verbose_name = u'интересные факты', blank=True,)
-    interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста интересных фактов', max_length = 7)
+    image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
+    image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
+    interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста интересных фактов', max_length = 7, blank=True)
     map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_countryImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
     map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50)
@@ -104,6 +105,9 @@ class Hotel(models.Model):
 
     def get_orders(self):
         return self.order_set_hotel.all()
+
+    def get_facts(self):
+        return self.fact_hotel.all()
 
 class HotelImage(models.Model):
     hotel = models.ForeignKey(Hotel, verbose_name=u'страна')
@@ -137,9 +141,10 @@ class IntegerRangeField(models.IntegerField):
         return super(IntegerRangeField, self).formfield(**defaults)
 
 class Tour(models.Model):
-    country = models.ManyToManyField(Country, verbose_name=u'страна')
+    country = models.ManyToManyField(Country, verbose_name=u'страна') # todo: страны для тура при сохранении будут вытаскиваться из отелей!
     hotel = models.ManyToManyField(Hotel, verbose_name=u'отель')
     title = models.CharField(verbose_name = u'название', max_length = 100)
+    description = models.TextField(verbose_name = u'описание',)
     price = models.DecimalField(verbose_name=u'цена', decimal_places=2, max_digits=10)
     stars = IntegerRangeField(verbose_name=u'количество звёзд 1-5', min_value=1, max_value=5, blank=True, null=True)
     type = models.CharField(max_length=20, verbose_name=u'тип', choices=type_choices, blank=True)
@@ -196,10 +201,9 @@ class TourImage(models.Model):
 class TourImageSlider(models.Model):
     tour = models.ForeignKey(Tour, verbose_name=u'тур')
     image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_countryImage)
-    image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True,)
-    image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7)
-    interesting_facts = models.TextField(verbose_name = u'интересные факты', blank=True,)
-    interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7)
+    image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
+    image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
+    interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста интересных фактов', max_length = 7, blank=True)
     map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_countryImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
     map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50)
@@ -216,6 +220,28 @@ class TourImageSlider(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.image_main_title
+
+    def get_facts(self):
+        return self.fact_tour_is.all()
+
+class Fact(models.Model):
+    country = models.ForeignKey(Country, verbose_name=u'страна', blank=True, null=True, related_name='fact_country')
+    hotel = models.ForeignKey(Hotel, verbose_name=u'страна', blank=True, null=True, related_name='fact_hotel')
+    tour_is = models.ForeignKey(TourImageSlider, verbose_name=u'слайдер для тура', blank=True, null=True, related_name='fact_tour_is')
+    value = models.IntegerField(verbose_name=u'значение')
+    title = models.CharField(verbose_name=u'подпись', max_length=100)
+    order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
+    is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
+
+    object = PublishedManager()
+
+    class Meta:
+        ordering = ['-order',]
+        verbose_name =_(u'fact')
+        verbose_name_plural =_(u'facts')
+
+    def __unicode__(self):
+        return u'интересный факт №%s' %self.id
 
 class AdvertasingOnMain(models.Model):
     tour = models.ForeignKey(Tour, verbose_name=u'тур')

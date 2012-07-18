@@ -51,3 +51,9 @@ msgstr "заявка"
 
 msgid "orders"
 msgstr "заявки"
+
+msgid "fact"
+msgstr "факт"
+
+msgid "facts"
+msgstr "интересные факты"

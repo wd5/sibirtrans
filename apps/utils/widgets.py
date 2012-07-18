@@ -47,6 +47,36 @@ class RedactorClassic(Redactor):
 #class RedactorMicro(Redactor):
 #    toolbar = u'micro'
 
+class ColorPicker(forms.TextInput):
+    class Media:
+        js = (
+            '/media/js/jquery.js',
+            '/media/js/color_picker/jquery.miniColors.js',
+            )
+        css = {
+            'all': ('/media/js/color_picker/jquery.miniColors.css',)
+        }
+
+    def render(self,name,value,attrs=None):
+        attrs = {'class':'color-picker', 'size':"6"}
+        rendered = super(ColorPicker,self).render(name, value, attrs)
+        return rendered + mark_safe(u'''<script type="text/javascript">
+            $(document).ready( function() {
+                $(".color-picker").miniColors({
+                    letterCase: 'uppercase',
+                    change: function(hex, rgb) {
+                        logData('change', hex, rgb);
+                    },
+                    open: function(hex, rgb) {
+                        logData('open', hex, rgb);
+                    },
+                    close: function(hex, rgb) {
+                        logData('close', hex, rgb);
+                    }
+                });
+            });
+        </script>''')
+
 class AdminImageWidget(forms.FileInput):
     def render(self, name, value, attrs=None):
         output = []

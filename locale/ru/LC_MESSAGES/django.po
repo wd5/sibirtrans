@@ -148,6 +148,11 @@ msgstr "заявка"
 msgid "orders"
 msgstr "заявки"
 
+msgid "fact"
+msgstr "факт"
+
+msgid "facts"
+msgstr "интересные факты"
 
 #: apps/pages/__init__.py:2
 msgid "pages"
