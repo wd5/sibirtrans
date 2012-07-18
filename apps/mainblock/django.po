@@ -1,0 +1,53 @@
+msgid "Mainblock"
+msgstr "Основной блок сайта"
+
+msgid "mainblock"
+msgstr "основной блок сайта"
+
+msgid "country"
+msgstr "страна"
+
+msgid "countries"
+msgstr "страны"
+
+msgid "country_photo"
+msgstr "изображение"
+
+msgid "country_photos"
+msgstr "изображения"
+
+msgid "service"
+msgstr "изображение"
+
+msgid "services"
+msgstr "излображения сервисов"
+
+msgid "hotel"
+msgstr "отель"
+
+msgid "hotels"
+msgstr "отели"
+
+msgid "tour"
+msgstr "тур"
+
+msgid "tours"
+msgstr "туры"
+
+msgid "tour_slider_image"
+msgstr "изображение"
+
+msgid "tour_slider_images"
+msgstr "слайдер для отображения тура"
+
+msgid "advertasing_item"
+msgstr "предложение"
+
+msgid "advertasing_items"
+msgstr "предложения на главной"
+
+msgid "order"
+msgstr "заявка"
+
+msgid "orders"
+msgstr "заявки"
