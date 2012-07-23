@@ -400,6 +400,9 @@ input, textarea {
 .piece_des h2 a {
 	color: #ffbf13;
 }
+.piece_des h2 a:hover {
+	color: #eaab00;
+}
 .piece_countries {
 	font-size: 16px;
 	margin-bottom: 6px;
@@ -531,22 +534,26 @@ input, textarea {
 	display: inline-block;
 	vertical-align: top;
 	padding: 0 0 90px 0;
+	height: 52px;
 }
 .teaser_1 {
-	background: url('../img/teaser_1.png') no-repeat 0 100%;
+	background: url('../img/teaser_1.png') no-repeat 10px 100%;
 	width: 200px;
+	margin-right: 14px;
 }
 .teaser_2 {
 	background: url('../img/teaser_2.png') no-repeat 0 100%;
 	width: 280px;
+	margin-right: 18px;
 }
 .teaser_3 {
 	background: url('../img/teaser_3.png') no-repeat 0 100%;
 	width: 170px;
+	margin-right: 20px;
 }
 .teaser_4 {
 	background: url('../img/teaser_4.png') no-repeat 0 100%;
-	width: 250px;
+	width: 200px;
 }
 .teaser_blob {
 	display: inline-block;
@@ -567,6 +574,27 @@ input, textarea {
 	bottom: -13px;
 	left: -13px;
 }
+
+.teaser_1 .teaser_blob {
+	width: 88px;
+	left: 76px;
+	top: 34px;
+} 
+.teaser_2 .teaser_blob {
+	width: 88px;
+	left: 146px;
+	top: 44px;
+} 
+.teaser_3 .teaser_blob {
+	width: 42px;
+	left: 100px;
+	top: 50px;
+} 
+.teaser_4 .teaser_blob {
+	width: 92px;
+	left: 136px;
+	top: 30px;
+} 
 /*/teasers*/
 
 
@@ -847,6 +875,11 @@ input, textarea {
 .other_hotels_lnk a {text-decoration: none; border-bottom: 1px dashed #562d01; color: #562d01; font-style: italic;}
 .other_hotels_lnk a:hover {border-bottom-color: #935f28; color: #935f28;}
 
+
+.tour_other_hotels li {
+	display: inline-block;
+	vertical-align: top;
+}
 /*/tour_info*/
 
 
