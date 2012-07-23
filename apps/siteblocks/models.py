@@ -12,7 +12,6 @@ type_choices = (
     (u'redactor',u'redactor'),
 )
 
-
 class Settings(models.Model):
     title = models.CharField(
         verbose_name = u'Название',
@@ -37,18 +36,17 @@ class Settings(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
 
-def file_path_CMap(instance, filename):
-    return os.path.join('images','contactMaps',  translify(filename).replace(' ', '_') )
-
 class Contact(models.Model):
     city = models.CharField(verbose_name = u'город',max_length = 100)
+    city_in = models.CharField(verbose_name = u'в',max_length = 100, help_text=u'например Москва, тогда в: Москве')
     address = models.CharField(verbose_name = u'адрес',max_length = 255)
     phone = models.CharField(verbose_name = u'номер телефона',max_length = 255)
-    map_image = ImageField(verbose_name=u'карта', upload_to=file_path_CMap)
+    coord = models.CharField(max_length=100, verbose_name=u'Координаты')
+    map = models.CharField(max_length=1, verbose_name=u'Карта', blank=True)
     order = models.IntegerField(u'порядок сортировки', help_text=u'Чем больше число, тем выше располагается элемент', default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
-    object = PublishedManager()
+    objects = PublishedManager()
 
     class Meta:
         ordering = ['-order']

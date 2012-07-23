@@ -6,26 +6,32 @@ from pytils.translit import translify
 from apps.utils.utils import ImageField
 from apps.utils.managers import PublishedManager
 from sorl.thumbnail import get_thumbnail
+from django.db.models.signals import post_save
+
 
 def file_path_countryImage(instance, filename):
     return os.path.join('images','countryImage',  translify(filename).replace(' ', '_') )
 
+def file_path_countryFlags(instance, filename):
+    return os.path.join('images','countryFlags',  translify(filename).replace(' ', '_') )
+
 class Country(models.Model):
     title = models.CharField(verbose_name = u'название', max_length = 100)
+    icon = ImageField(verbose_name=u'иконка флага', upload_to=file_path_countryFlags)
     image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_countryImage)
     image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
     image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
     interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста итересных фактов', max_length = 7, blank=True)
     map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_countryImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
-    map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50)
+    map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50, blank=True)
     description = models.TextField(verbose_name = u'описание',)
     image_other = ImageField(verbose_name=u'дополнительное изображение', upload_to=file_path_countryImage, blank=True)
     image_other_description = models.TextField(verbose_name = u'описание под дополнительным изображением', blank=True)
     is_popular = models.BooleanField(verbose_name = u'популярное направление', default=False)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
-    object = PublishedManager()
+    objects = PublishedManager()
 
     class Meta:
         ordering = ['title']
@@ -40,6 +46,35 @@ class Country(models.Model):
 
     def get_facts(self):
         return self.fact_country.all()
+
+    def get_absolute_url(self):
+        return u'/countries/%s/' % self.id
+
+    def get_map_cropimg_url(self):
+        file, ext = os.path.splitext(self.map_image.url)
+        url = file + "_crop.png"
+        return url
+
+def pre_crop_map(sender, instance, created, **kwargs):
+    from apps.utils.utils import crop_map_image_util
+    from django.conf import settings
+    file, ext = os.path.splitext(instance.map_image.url)
+    url = file + "_crop.png"
+    output_size = [300, 300]
+    path = "%s%s" % (settings.ROOT_PATH, url)
+    if os.path.isfile(path):
+        pass
+    else:
+        try:
+            crop_map_image_util(
+                post=False,
+                original_img=instance.map_image,
+                output_size=output_size
+            )
+        except:
+            pass
+
+post_save.connect(pre_crop_map, sender=Country)
 
 class CountryImage(models.Model):
     country = models.ForeignKey(Country, verbose_name=u'страна')
@@ -79,18 +114,18 @@ class Hotel(models.Model):
     image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
     image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
     interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста интересных фактов', max_length = 7, blank=True)
-    map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_countryImage)
+    map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_hotelImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
-    map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50)
+    map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50, blank=True)
     description = models.TextField(verbose_name = u'описание',)
     short_description = models.TextField(verbose_name = u'краткое описание',)
     conditions_text = models.TextField(verbose_name = u'условия проживания',)
-    service = models.ManyToManyField(Service, verbose_name=u'сервис')
+    service = models.ManyToManyField(Service, verbose_name=u'сервис', blank=True, null=True)
 
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
-    object = PublishedManager()
+    objects = PublishedManager()
 
     class Meta:
         ordering = ['-order']
@@ -109,9 +144,11 @@ class Hotel(models.Model):
     def get_facts(self):
         return self.fact_hotel.all()
 
+post_save.connect(pre_crop_map, sender=Hotel)
+
 class HotelImage(models.Model):
     hotel = models.ForeignKey(Hotel, verbose_name=u'страна')
-    image = ImageField(verbose_name=u'Картинка', upload_to=file_path_countryImage)
+    image = ImageField(verbose_name=u'Картинка', upload_to=file_path_hotelImage)
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
 
     class Meta:
@@ -140,8 +177,29 @@ class IntegerRangeField(models.IntegerField):
         defaults.update(kwargs)
         return super(IntegerRangeField, self).formfield(**defaults)
 
+def str_price(price):
+    if not price:
+        return u'0'
+    value = u'%s' %price
+    if price._isinteger():
+        value = u'%s' %value[:len(value)-3]
+        count = 3
+    else:
+        count = 6
+
+    if len(value)>count:
+        ends = value[len(value)-count:]
+        starts = value[:len(value)-count]
+
+        if len(starts)>3:
+            starts = u'%s %s' % (starts[:1],starts[1:len(starts)])
+
+        return u'%s %s' %(starts, ends)
+    else:
+        return u'%s' % value
+
 class Tour(models.Model):
-    country = models.ManyToManyField(Country, verbose_name=u'страна') # todo: страны для тура при сохранении будут вытаскиваться из отелей!
+    country = models.ManyToManyField(Country, verbose_name=u'страна')
     hotel = models.ManyToManyField(Hotel, verbose_name=u'отель')
     title = models.CharField(verbose_name = u'название', max_length = 100)
     description = models.TextField(verbose_name = u'описание',)
@@ -166,7 +224,7 @@ class Tour(models.Model):
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
-    object = PublishedManager()
+    objects = PublishedManager()
 
     class Meta:
         ordering = ['-order']
@@ -185,6 +243,16 @@ class Tour(models.Model):
     def get_orders(self):
         return self.order_set_tour.all()
 
+    def get_str_price(self):
+        result = str_price(self.price)
+        return result
+
+    def get_countries(self):
+        return self.country.all()
+
+    def get_absolute_url(self):
+        return u'/tours/%s/%s/' % (self.type,self.id)
+
 class TourImage(models.Model):
     tour = models.ForeignKey(Tour, verbose_name=u'тур')
     image = ImageField(verbose_name=u'Картинка', upload_to=file_path_tourImage)
@@ -200,18 +268,18 @@ class TourImage(models.Model):
 
 class TourImageSlider(models.Model):
     tour = models.ForeignKey(Tour, verbose_name=u'тур')
-    image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_countryImage)
+    image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_tourImage)
     image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
     image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
     interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста интересных фактов', max_length = 7, blank=True)
-    map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_countryImage)
+    map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_tourImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
-    map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50)
+    map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50, blank=True)
 
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
-    object = PublishedManager()
+    objects = PublishedManager()
 
     class Meta:
         ordering = ['-order']
@@ -224,6 +292,8 @@ class TourImageSlider(models.Model):
     def get_facts(self):
         return self.fact_tour_is.all()
 
+post_save.connect(pre_crop_map, sender=TourImageSlider)
+
 class Fact(models.Model):
     country = models.ForeignKey(Country, verbose_name=u'страна', blank=True, null=True, related_name='fact_country')
     hotel = models.ForeignKey(Hotel, verbose_name=u'страна', blank=True, null=True, related_name='fact_hotel')
@@ -233,7 +303,7 @@ class Fact(models.Model):
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
-    object = PublishedManager()
+    objects = PublishedManager()
 
     class Meta:
         ordering = ['-order',]

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% load thumbnail siteblocks_extras %}
+
+{% block title %}
+    Контактная информация &mdash;
+{% endblock %}
+
+{% block extended_js %}
+    <script src="http://api-maps.yandex.ru/2.0/?load=package.full&mode=debug&lang=ru-RU" type="text/javascript"></script>
+    <script type="text/javascript">
+    $(function(){
+
+        ymaps.ready(function () {
+            {% if contact_curr %}
+                var map = new ymaps.Map("map",
+                    {
+                        center: [{{ contact_curr.coord }}],
+                        zoom: 15,
+                        type: "yandex#publicMap"
+                    }
+                );
+
+                map.controls.add("zoomControl", { left: 70, top: 251 });
+
+                {% for contact in contacts %}
+                        var placemark_{{ contact.id }} = new ymaps.Placemark(
+                            [{{ contact.coord }}],
+                            {
+                                'balloonContent': "{{ contact.city }} {{ contact.address }}"
+                            }
+                        );
+                        map.geoObjects.add(placemark_{{ contact.id }});
+                {% endfor %}
+            {% endif %}
+
+            $(".contact .contact_address").live('click',function(){
+                var el = $(this)
+                var parent = el.parents('.contact')
+                var contact_set = $('.contacts_blk .contact')
+                var coords = parent.find(".contact_coord").val()
+                if (el.parents('.contact_curr').html()!=null)
+                    {}
+                else
+                    {
+                        contact_set.removeClass('contact_curr')
+                        parent.addClass('contact_curr')
+                        coords_array = coords.split(',')
+                        map.panTo([parseFloat(coords_array[0]),parseFloat(coords_array[1])], {flying: true});
+                    }
+                return false;
+            });
+
+        });
+    });
+    </script>
+{% endblock %}
+
+{% block header_contacts %}
+{% endblock %}
+
+{% block header_menu %}
+    <h1>Контактная информация</h1>
+    <div class="breadcrumbs"><a href="{{ page.parent.get_absolute_url }}">О компании</a></div>
+{% endblock %}
+
+{% block main %}
+
+{#    <ul id="mapMenu"></ul>#}
+{#    <div id="YMapsID" style="width:600px;height:400px"></div>#}
+
+    {% if contacts %}
+        <div class="contact contact_curr">
+            <div class="contact_map">
+                <div class="contact_map_in">
+                    <div id="map" style="height:456px;width:960px;"></div>
+                </div>
+                <div class="contact_map_t"></div>
+                <div class="contact_map_r"></div>
+                <div class="contact_map_b"></div>
+                <div class="contact_map_l"></div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="contacts_blk">
+        {% for contact in contacts %}
+            <div class="contact{% if contact.id == contact_curr.id %} contact_curr{% endif %}">
+                <div class="contact_city">{{ contact.city }}</div>
+                <div class="contact_info">
+                    <div class="contact_address"><span>{{ contact.address }}</span></div>
+                    <div class="contact_tel">{{ contact.phone|safe }}</div>
+                    <input type="hidden" class="contact_coord" value="{{ contact.coord }}">
+                </div>
+            </div>
+        {% empty %}
+            Контактная информация ещё не указана
+        {% endfor %}
+    </div>
+
+{% endblock %}

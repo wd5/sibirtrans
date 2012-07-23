@@ -9,6 +9,5 @@ def settings(request):
         contacts = False
 
     return {
-        'contacts': contacts,
         'site_name': SITE_NAME,
     }

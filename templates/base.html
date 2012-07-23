@@ -1,14 +1,15 @@
-{% load pages_extras %}
+{% load pages_extras siteblocks_extras %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="description" content="{% block META_description %}{{ meta.description }}{% endblock %}"/>
-    <meta name="keywords" content="{% block META_keywords %}{{ meta.keywords }}{% endblock %}"/>
-    <link href="/static/css/style.css" rel="stylesheet" type="text/css" />
-    <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen" href="/static/css/ie.css" /><![endif]-->
-    <script type="text/javascript" src="/static/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/js/script.js"></script>
+    <link href="/media/css/style.css" rel="stylesheet" type="text/css" />
+    <!--[if lte IE 8]><link rel="stylesheet" type="text/css" media="screen" href="/media/css/ie.css" /><![endif]-->
+    <script type="text/javascript" src="/media/js/jquery.js"></script>
+    <script type="text/javascript" src="/media/js/jquery-ui-1.8.21.custom.min.js"></script>
+    {% block extended_js %}
+    {% endblock %}
+    <script type="text/javascript" src="/media/js/script.js"></script>
     <title>
         {% block title %}
             {% if meta.title %}
@@ -22,6 +23,50 @@
 </head>
 
 <body>
-{% block_menu request.path %}
+<div class="wrapper">
+
+<!--PAGE-->
+<div class="page">
+
+    <!--HEADER-->
+	<div class="header_inner">
+		<a id="logo_box" href="/" title="Сибирь-транс"><img id="logo" src="/media/img/logo.png" alt="Сибирь-транс" width="163" height="68" /></a>
+
+        {% block header_contacts %}
+            {% header_contacts %}
+        {% endblock %}
+
+        {% block header_menu %}
+        {% endblock %}
+	</div>
+    <!--/HEADER-->
+
+    <!--MAIN-->
+    <div class="main">
+        {% block main %}
+        {% endblock %}
+    </div>
+    <!--/MAIN-->
+
+    <!--FOOTER-->
+    <div class="footer">
+		<div id="copyright">© 2001—{% now "Y" %} «Сибирьтранс»</div>
+
+		<div class="footer_contacts_lnk"><a href="/about/contacts/">Контактная информация</a></div>
+
+        {% block footer_menu %}
+            <div class="footer_menu">
+                {% block_footer_menu request.path %}
+    		</div>
+        {% endblock %}
+
+		<a id="madein" title="Разработка сайта — студия OctoberWeb" href="http://octoberweb.ru/"><img id="octoberweb" alt="Разработка сайта — студия OctoberWeb" src="/media/img/octoberweb.png" width="32" height="32"/>разработка сайта <span>OctoberWeb</span></a>
+    </div>
+    <!--/FOOTER-->
+
+</div>
+<!--/PAGE-->
+
+</div><!--/wrapper-->
 </body>
 </html>

@@ -12,6 +12,9 @@ urlpatterns = patterns('',
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
 
+    #Map crop
+    (r'^admin/map_image_crop/mainblock/(?P<model>[^/]+)/(?P<pk>\d+)/$', 'apps.mainblock.views.crop_map_image'),
+
     # Admin
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin_tools/', include('admin_tools.urls')),

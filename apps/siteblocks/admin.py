@@ -33,10 +33,23 @@ class SettingsAdmin(admin.ModelAdmin):
     form = SettingsAdminForm
 admin.site.register(Settings, SettingsAdmin)
 
+class ContactAdminForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+
+    class Media:
+        js = (
+            '/media/js/jquery.js',
+            #'http://api-maps.yandex.ru/1.1/index.xml?key=AL-wrE8BAAAAxy9bEgMAl_YRsCtotTo0d6g3O96ykgenhdkAAAAAAAAAAACUSKq_f2kSJDTQEhTMfIyf19Y5Iw==&modules=pmap',
+            'http://api-maps.yandex.ru/2.0/?load=package.full&mode=debug&lang=ru-RU',
+            '/media/js/ymaps_form.js',
+        )
+
 class ContactAdmin(AdminImageMixin, admin.ModelAdmin):
-    list_display = ('id','city','address','is_published',)
+    list_display = ('id','city','address','coord','order','is_published',)
     list_display_links = ('id','city','address',)
-    list_editable = ('is_published',)
+    list_editable = ('order','is_published',)
     list_filter = ('is_published',)
+    form = ContactAdminForm
 admin.site.register(Contact, ContactAdmin)
 

@@ -1,0 +1,19 @@
+{% if contacts or latest %}
+    <div class="contacts">
+        <div class="contacts_city">в <a href="#"><span>{{ latest.city_in }}</span></a>
+            <span class="city_curr" style="display: none;" >{{ latest.city }}</span>
+            </div>
+        <div class="tel">{{ latest.phone|safe }}</div>
+        <div class="contacts_city_menu" style="display: none;">
+            <ul>
+                {% for contact in contacts %}
+                    <li>
+                        <a href="#">{{ contact.city }}</a>
+                        <span class="tel" style="display: none;">{{ contact.phone|safe }}</span>
+                        <span class="city_in" style="display: none;">{{ contact.city_in }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div><!--/contacts-->
+{% endif %}

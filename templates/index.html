@@ -1,23 +1,107 @@
 {% extends "base.html" %}
 
-{% load thumbnail %}
+{% load thumbnail pages_extras %}
 
-{% if page.title %}
-    {% block title %}
-        {{ page.title }} &mdash;
-    {% endblock %}
-{% endif %}
+{% block title %}
+    Главная &mdash;
+{% endblock %}
 
-{% block center %}
-    <div class="text text_page">
-        {% if page.image %}
-            <p>
-                {% thumbnail page.image "374x252" as  small %}
-                    <img src="{{ small.url }}" width="{{ small.x }}" height="{{ small.y }}" alt="" />
-                {% endthumbnail %}
-            </p>
-        {% endif %}
-        {{ page.content|safe }}
+{% block header_menu %}
+    {% block_menu request.path %}
+{% endblock %}
+
+{% block main %}
+        <div class="pieces">
+            {% for advertasing_item in advertasing %}
+                <div class="piece piece_{{ forloop.counter }}"
+                        {% if forloop.counter == 1 %}
+                            {% thumbnail advertasing_item.image "411x466" crop="center" as im %}
+                                style="background: url('{{ im.url }}') no-repeat 0 0;"
+                            {% endthumbnail %}
+                        {% endif %}
+                        {% if forloop.counter == 2 %}
+                            {% thumbnail advertasing_item.image "370x528" crop="center" as im %}
+                                style="background: url('{{ im.url }}') no-repeat 0 0;"
+                            {% endthumbnail %}
+                        {% endif %}
+                        {% if forloop.counter == 3 %}
+                            {% thumbnail advertasing_item.image "560x216" crop="center" as im %}
+                                style="background: url('{{ im.url }}') no-repeat -200px 0;"
+                            {% endthumbnail %}
+                        {% endif %}>
+                    <div class="piece_fr"></div>
+                    <div class="piece_des">
+                        <h2><a href="{{ advertasing_item.tour.get_absolute_url }}">{{ advertasing_item.tour.title }}</a></h2>
+                        <div class="piece_countries">
+                            {% for country in advertasing_item.tour.get_countries %}
+                                <a href="{{ country.get_absolute_url }}">{{ country.title }}</a>{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="piece_price">{{ advertasing_item.tour.get_str_price }} <span class="r">руб.</span></div>
+                    </div>
+                </div>
+                {% if forloop.counter == 3 %}
+                    {% thumbnail advertasing_item.image "560x216" crop="center" as im %}
+                        <div class="piece piece_4" style="background: url('{{ im.url }}') no-repeat 0 0;">
+                            <div class="piece_fr"></div>
+                        </div>
+                        <div class="piece piece_5" style="background: url('{{ im.url }}') no-repeat -80px 0;">
+                            <div class="piece_fr"></div>
+                        </div>
+                    {% endthumbnail %}
+                {% endif %}
+            {% endfor %}
+
+            <div class="random_tour"><a href="#"><span>Тур на&nbsp;удачу</span></a></div>
+        </div><!--/pieces-->
+
+
+    <div class="index_pop">
+        <h2>Популярные направления</h2>
+        <ul>
+            {% for country in pop_countries %}
+                <li><a href="{{ country.get_absolute_url }}"><img src="{{ country.icon.url }}" alt="" /><span>{{ country.title }}</span></a></li>
+            {% empty %}
+                Популярные направления пока не указаны
+            {% endfor %}
+        </ul>
+
+        <div class="index_pop_all"><a href="{% url countries %}">все страны</a></div>
+
+        <div class="ip_t"><img src="/media/img/ip_t.png" alt="" /></div>
+        <div class="ip_r"><img src="/media/img/ip_r.png" alt="" /></div>
+        <div class="ip_b"><img src="/media/img/ip_b.png" alt="" /></div>
+        <div class="ip_l"><img src="/media/img/ip_l.png" alt="" /></div>
+    </div><!--/index_pop-->
+
+    <div class="teasers">
+        <div class="teaser teaser_1">
+            <div class="teaser_blob">
+                <a href="/ski_resorts/">Горнолыжные курорты</a>
+                <div class="teaser_blob_arr"></div>
+            </div>
+        </div>
+        <div class="teaser teaser_2">
+            <div class="teaser_blob">
+                <a href="/excursions/">Экскурсионные туры</a>
+                <div class="teaser_blob_arr"></div>
+            </div>
+        </div>
+        <div class="teaser teaser_3">
+            <div class="teaser_blob">
+                <a href="/beaches/">Пляжи</a>
+                <div class="teaser_blob_arr"></div>
+            </div>
+        </div>
+        <div class="teaser teaser_4">
+            <div class="teaser_blob">
+                <a href="/exotic_tours/">Экзотические туры</a>
+                <div class="teaser_blob_arr"></div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
+{% block footer_menu %}
+
+{% endblock %}

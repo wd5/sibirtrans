@@ -4,10 +4,10 @@ from models import Question#,QuestionCategory
 
 
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('id','pub_date','name','email', 'is_published',)
+    list_display = ('id','pub_date','email', 'is_published',)
     list_display_links = ('id','pub_date',)
     list_editable = ('is_published',)
-    search_fields = ('name','email', 'question', 'answer',)
+    search_fields = ('email', 'question', 'answer',)
     list_filter = ('pub_date','is_published',)
 
 #class QuestionCategoryAdmin(admin.ModelAdmin):

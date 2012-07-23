@@ -25,7 +25,33 @@ class Page(MPTTModel):
 
     #@models.permalink
     def get_absolute_url(self):
-        return self.url
+        if self.parent:
+
+            exist_parent = True
+            first = True
+            abs_url = self.url[1:]
+            while exist_parent:
+                if first:
+                    parent = self.parent
+                    first = False
+                else:
+                    if parent.parent:
+                        parent = parent.parent
+                    else:
+                        exist_parent = False
+                if exist_parent:
+                    abs_url= u'%s%s' % (parent.url,abs_url)
+
+            if not abs_url.startswith('/'):
+                abs_url = '/%s' % abs_url
+            if not abs_url.endswith('/'):
+                abs_url = '%s/' % abs_url
+            abs_url = abs_url.replace('//', '/')
+
+            return abs_url
+            #return u'%s%s' % (self.parent.url,self.url[1:])
+        else:
+            return self.url
 
     class Meta:
         verbose_name = _(u'page_item')
@@ -36,7 +62,6 @@ class Page(MPTTModel):
 
     def __unicode__(self):
         return u'%s (%s)' % (self.title, self.get_absolute_url())
-
 
     def save(self, **kwargs):
         # add the first and the last slash if it needed

@@ -25,6 +25,9 @@ STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 ADMIN_MEDIA_ROOT = os.path.join(ROOT_PATH, 'static/admin')
 
+CROP_TEMLATE_IMG = os.path.join(MEDIA_ROOT, 'uploads/crop_image_template.png')
+CROP_TEMLATE_IMG2 = os.path.join(MEDIA_ROOT, 'uploads/crop_image_template2.png')
+
 STATICFILES_DIRS = (
     #os.path.join(ROOT_PATH, 'static'),
 )

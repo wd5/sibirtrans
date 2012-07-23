@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% load thumbnail siteblocks_extras %}
+
+{% if page.title %}
+    {% block title %}
+        {{ page.title }} &mdash;
+    {% endblock %}
+{% endif %}
+
+{% block header_contacts %}
+{% endblock %}
+
+{% block header_menu %}
+    <h1>{{ page.title }}</h1>
+{% endblock %}
+
+{% block main %}
+    <div class="for_tourist_page">
+        <div class="tourist_l col">
+            <div class="for_tourist">
+                <div class="for_tourist_menu">
+                    <ul>
+                        {% for child in page.get_children %}
+                            <li><a href="{{ child.get_absolute_url }}">{{ child.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="pl_t"><img src="/media/img/pl_t.png" alt="" /></div>
+                <div class="pl_r"><img src="/media/img/pl_r.png" alt="" /></div>
+                <div class="pl_b"><img src="/media/img/pl_b.png" alt="" /></div>
+                <div class="pl_l"><img src="/media/img/pl_l.png" alt="" /></div>
+            </div><!--/for_tourist_zl-->
+        </div><!--/tourist_l-->
+
+        <div class="tourist_r col">
+            <div class="faqs">
+                <form class="faq_form" method="post" action="">
+                    <div class="textarea">{{ form.question }}</div>
+                    <div class="input">{{ form.email }}</div>
+                    <div class="btn1"><div class="btn1_in"><input type="submit" name="" value="Задать вопрос" id="send_question"/></div></div>
+                </form>
+                {% if questions %}
+                    {% for question in questions %}
+                        <div class="faq">
+                            <div class="question">
+                                <div class="faq_text"><p>{{ question.question }}</p></div>
+                            </div>
+                            <div class="answer">
+                                <div class="faq_author">{{ question.author }}, {{ question.ans_date|date:"j E Y" }}</div>
+                                <div class="faq_text"><p>{{ question.answer }}</p></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div><!--/faqs-->
+
+            {% if not questions %}
+                <div class="tourist_article text">
+                    <h2 class="article_h">{{ current_page.title }}</h2>
+                    {{ current_page.content|safe }}
+                </div>
+            {% endif %}
+        </div><!--/tourist_r-->
+    </div><!--/for_tourist_page-->
+{% endblock %}

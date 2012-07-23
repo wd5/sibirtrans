@@ -10,6 +10,7 @@ import xhtml2pdf.pisa as pisa
 import settings
 from django.db import models
 
+
 class ImageField(models.ImageField, sorl_ImageField):
     pass
 
@@ -34,7 +35,7 @@ def url_spliter(url,cut_count):
         current = '/%s' % current
     if not current.endswith('/'):
         current = '%s/' % current
-    current = current.replace('//,', '/')
+    current = current.replace('//', '/')
 
     return current
 
@@ -138,4 +139,66 @@ def crop_image(post, original_img, output_size):
         new_size = image.size
     image = image.resize(new_size, Image.ANTIALIAS)
     image.save(name, "JPEG", quality=100)
+    return True
+
+def crop_map_image_util(post, original_img, output_size):
+    import settings
+    try:
+        from PIL import Image
+    except ImportError:
+        import Image
+
+    if post:
+        x1 = int(post['x1'])
+        y1 = int(post['y1'])
+        x2 = int(post['x2'])
+        y2 = int(post['y2'])
+    else:
+        x1 = 0
+        y1 = 0
+        x2 = original_img.height
+        y2 = original_img.height
+    box = (x1, y1, x2, y2)
+    infile = settings.ROOT_PATH + original_img.url
+    file, ext = os.path.splitext(infile)
+    im = Image.open(infile)
+    ms = im.crop(box)
+    name = file + "_crop.png"
+    #ms.save(name, "JPEG")
+    #image = Image.open(name)
+    image = ms
+    m_width = float(output_size[0])
+    m_height = float(output_size[1])
+    w_k = image.size[0]/m_width
+    h_k = image.size[1]/m_height
+    if output_size < image.size:
+        if w_k > h_k:
+            new_size = (int(m_width), int(image.size[1]/w_k))
+        else:
+            new_size = (int(image.size[0]/h_k), int(m_height))
+    else:
+        new_size = image.size
+    image = image.resize(new_size, Image.ANTIALIAS)
+
+    # сливаем с шаблоном и "режем!"
+    template_img = settings.CROP_TEMLATE_IMG
+    template_img2 = settings.CROP_TEMLATE_IMG2
+    mask = Image.open(template_img)
+    mask2 = Image.open(template_img2)
+
+    if image.mode != 'RGBA':
+        image = image.convert('RGBA')
+
+    image2 = Image.new('RGBA', image.size)
+    image = Image.composite(image, image2, mask2)
+
+    # create a transparent layer the size of the image and draw the watermark in that layer.
+    # the transparancy layer will be used as the mask
+
+    layer = Image.new('RGBA', image.size, (0,0,0,0))
+    position = (0, 0)
+    layer.paste(mask, position)
+    image = Image.composite(layer, image, layer)
+
+    image.save(name, "PNG", quality=100)
     return True
