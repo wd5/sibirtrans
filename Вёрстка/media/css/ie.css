@@ -2,18 +2,39 @@
 
 
 /*6-7*/
-.col {
+.col,
+.h_group h1, .h_group_lnk,
+.menu li,
+.tours_menu li,
+.index_pop li,
+.teaser,
+.teaser_blob,
+.promo_num_val, .promo_num_name,
+.timeline_day,
+.timeline_day_img, .timeline_day_name,
+.for_tourist_article_preview, .for_tourist_menu,
+.hotel_service,
+.tour_order_price, .tour_order_btn,
+.item,
+.item_first_img, .item_first_des, .item_first_price, .item_first_time,
+.price_filter_input,
+.hotel_filter h3, .stars, .star,
+.contact_city, .contact_info,
+.footer_menu li,
+.btn1, .btn1_in {
 	*display:inline;
 	*zoom:1;
 }
-.some {
+.item_des {
 	*position:relative;
 	*zoom:1;
 }
+
+#hotel_filter_slider {
+	*margin: -8px 0 0 54px;
+}
+.order_form .btn1 input {
+	*width: 231px;
+}
+
 /*6-7*/
-
-
-
-/*6*/
-/*6*/
-

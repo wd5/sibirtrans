@@ -20,3 +20,12 @@ $(function() {
 		step: 1
 	});
 });
+
+
+$(function() {
+   $('.tour_other_hotels').jcarousel({
+        scroll: 1,
+        visible: 3,
+        wrap: "circular"
+    });
+});

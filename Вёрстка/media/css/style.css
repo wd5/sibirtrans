@@ -64,6 +64,7 @@ body {
 	margin: 0 auto;
 	min-width: 996px;
 	overflow: hidden;
+	position: relative;
 }
 
 .page {
@@ -114,6 +115,10 @@ h3 {
 	color: #ffcd37;
 	border-bottom: 2px dotted #ffcd37;
 }
+.h_group_lnk a:hover {
+	color: #eaab00;
+	border-bottom-color: #eaab00;
+}
 .h_group .btn1 {
 	float: right;
 	margin: 12px 40px 0 0;
@@ -134,7 +139,7 @@ input, textarea {
 /*-----------------HEADER-----------------*/
 /*layout*/
 .header_inner {
-	min-height: 120px;
+	min-height: 124px;
 	position: relative;
 	margin: 0 0 0 0;
 	padding: 12px 0 0 0;
@@ -172,6 +177,9 @@ input, textarea {
 .menu a {
 	color: #562d01;
 }
+.menu a:hover {
+	color: #000;
+}
 /*/menu*/
 
 
@@ -200,7 +208,7 @@ input, textarea {
 	text-decoration: none;
 }
 .tours_menu span {
-	border-bottom: 1px dashed #333;
+	border-bottom: 1px dashed #958124;
 }
 .tours_menu img {
 	position: relative;
@@ -232,6 +240,7 @@ input, textarea {
 }
 .tel {
 	font-size: 27px;
+	line-height: 24px;
 	font-weight: bold;
 	letter-spacing: -1px;
 }
@@ -261,6 +270,9 @@ input, textarea {
 	border-bottom: 1px dashed #5e370d; 
 	color: #5e370d;
 }
+.contacts_city a:hover span {
+	color: #000;
+}
 
 .contacts_city_menu {
 	background: #fff;
@@ -268,6 +280,7 @@ input, textarea {
 	width: 166px;
 	padding: 12px 12px 12px 12px;
 	border-radius: 5px;
+	margin-top: -3px;
 }
 .contacts_city_menu li {
 	margin-bottom: 4px;
@@ -677,6 +690,7 @@ input, textarea {
 }
 .promo_map_name, .promo_map_des {
 	font-weight: bold;
+	position: relative;
 }
 .promo_map_name {
 	font-size: 24px;
@@ -850,35 +864,92 @@ input, textarea {
 	margin: 0 0 36px 0;
 }
 .tour_info_l {
-	width: 400px;
+	width: 620px;
 	margin-right: 36px;
 }
 .tour_info_r {
-	width: 520px;
+	width: 300px;
 }
 .tour_hotel img {
 	float: left;
-	margin: 0 18px 18px 0;
+	margin: 0 18px 0 0;
 }
 .tour_hotel_name {
 	color: #562d01;
 	font-size: 30px;
-	line-height: 36px;
+	line-height: 34px;
 	font-weight: normal;
 }
 .tour_hotel_des {
 	font-size: 16px;
 	line-height: 21px;
-	margin-bottom: 12px;
+	margin: -10px 0 12px 0;
+}
+.tour_info_r .for_tourist_zl {
+	margin-top: 12px;
 }
 
 .other_hotels_lnk a {text-decoration: none; border-bottom: 1px dashed #562d01; color: #562d01; font-style: italic;}
 .other_hotels_lnk a:hover {border-bottom-color: #935f28; color: #935f28;}
 
 
-.tour_other_hotels li {
-	display: inline-block;
-	vertical-align: top;
+.tour_other_hotels {
+}
+.tour_other_hotels_slide {
+	width: 200px;
+	margin: 0 auto;
+}
+.tour_other_hotels h3 {
+	margin: 0 0 4px 0;
+}
+.tour_other_hotels_price {
+	font-weight: bold;
+}
+.tour_other_hotels_price_val {
+	font-size: 18px;
+}
+.tour_other_hotels_price .r {	
+	font-weight: bold;
+	position: relative;
+	top: -5px;
+}
+
+
+.tour_other_hotels_out {
+ 	border: 2px solid #562d01;
+	padding: 30px 80px 18px 80px;
+	margin: -20px 0 54px 0;
+}
+.jcarousel-container-horizontal, .jcarousel-clip-horizontal {
+    width: 100%;
+}
+.jcarousel-clip-horizontal {
+    overflow: hidden;
+}
+.slide {
+    position: relative;
+    height: 500px;
+    width: 960px;
+}
+.jcarousel-item {
+	width: 200px;
+	margin: 0;
+}
+
+.jcarousel-next, .jcarousel-prev {
+	display: block;
+	width: 44px;
+	height: 44px;
+	background: url('../img/slider_arrs.png') no-repeat;
+	position: absolute;
+	top: 50px;
+}
+.jcarousel-prev {
+	left: -50px;
+}
+.jcarousel-next {
+	right: -50px;
+	background-position: -54px 0;
 }
 /*/tour_info*/
 
@@ -921,6 +992,9 @@ input, textarea {
 	position: absolute;
 	bottom: 10px;
 	left: 520px;
+}
+.faq_form .btn1 input {
+	width: 199px;
 }
 
 .for_tourist_zl, .for_tourist {
@@ -1130,6 +1204,9 @@ input, textarea {
 .item_des h3 a {
 	color: #ffbf13;
 }
+.item_des h3 a:hover {
+	color: #eaab00;
+}
 .item_country {
 	margin-bottom: 6px;
 }
@@ -1187,6 +1264,9 @@ input, textarea {
 }
 .item_first_h a {
 	color: #ffbf13;
+}
+.item_first_h a:hover {
+	color: #eaab00;
 }
 .item_first_country {
 	font-size: 16px;
@@ -1256,6 +1336,9 @@ input, textarea {
 	width: 88px;
 	margin: 0 0 0 20px;
 }
+.ui-slider-range {
+height: 0;
+}
 .ui-slider-handle {
 	width: 14px;
 	height: 24px;
@@ -1263,6 +1346,7 @@ input, textarea {
 	background: url('../img/price_filter_handle.png') no-repeat;
 	position: relative;
 	top: -3px;
+	zoom: 1;
 }
 
 .hotel_filter h3, .stars, .star {
@@ -1472,6 +1556,9 @@ input, textarea {
 .footer_menu a {
 	color: #562d01;
 }
+.footer_menu a:hover {
+	color: #000;
+}
 #madein {
 	color: #000;
 	font-size:12px;
@@ -1636,7 +1723,24 @@ input, textarea {
 	padding: 20px;
 	margin: 0 auto;
 }
+.order_form label {
+	font-weight: bold;
+	display: block;
+	font-size: 21px;
+	margin-bottom: 12px;
+}
+.order_form .input, .order_form .textarea {
+	margin-bottom: 30px;
+}
+.order_form .input input {
+	width: 400px;
+}
+.order_form textarea { 
+	width: 400px;
+	height: 100px;
+}
 /*/modal*/
+
 
 
 
