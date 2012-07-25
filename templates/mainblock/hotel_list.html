@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load thumbnail pages_extras pagination_tags %}
+
+{% block title %}
+    Отели &mdash;
+{% endblock %}
+
+{% block header_menu %}
+    <div class="h_group">
+        <div class="btn1"><div class="btn1_in"><a class="fancybox fancybox.ajax" href="/prepare_order/none/none/">Оформить заявку</a></div></div>
+        <h1>Отели</h1>
+        <div class="h_group_lnk"><a href="{% url tours %}">наши туры</a></div>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="items">
+        {% autopaginate hotels 12 %}
+        {% for hotel in hotels %}
+            <div class="item">
+                <div class="item_img">
+                    {% thumbnail hotel.image_main "260x210" crop="center" as im %}
+                        <img src="{{ im.url }}" width="260" height="210" alt="" />
+                    {% endthumbnail %}
+                    <a class="item_img_fr item_img_fr_{% cycle '1' '2' '3' '4' '5' '6' %}" href="{{ hotel.get_absolute_url }}"></a>
+                </div>
+                <div class="item_des">
+                    <h3><a href="{{ hotel.get_absolute_url }}">{{ hotel.title }}</a></h3>
+                    {% comment %}<div class="item_country"><a href="#">Сейшелы</a></div>
+                    <div class="item_price">14 150 <span class="r">руб.</span></div>{% endcomment %}
+                </div>
+            </div>
+        {% empty %}
+            Ни одного отеля пока не добавлено.
+        {% endfor %}
+        {% paginate %}
+    </div><!--/items-->
+{% endblock %}

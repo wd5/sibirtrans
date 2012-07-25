@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% load thumbnail siteblocks_extras pagination_tags pages_extras %}
+
+
+{% block title %}
+    {{ tour.title }} &mdash;
+{% endblock %}
+
+
+{% block header_contacts %}
+{% endblock %}
+
+{% block header_menu %}
+    <h1>{{ tour.title }}</h1>
+
+    <div class="breadcrumbs"><a href="{% url tours %}">Туры</a>  {% if tour.type %}/{% endif %}
+        <a href="{% url tours %}?type={{ tour.type }}">
+            {% ifequal tour.type 'exclusive' %}Эксклюзивные{% endifequal %}
+            {% ifequal tour.type 'health' %}Лечебные{% endifequal %}
+            {% ifequal tour.type 'hot' %}Горящие{% endifequal %}
+        </a>
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="promo">
+            {% for slide in tour.get_tour_slider_images %}
+                <div class="promo_img promo_img_slider" {% if not forloop.first %}style="display: none;"{% endif %}>
+                    {% thumbnail slide.image_main "1040x466" crop="center" as im %}
+                        <img src="{{ im.url }}" alt="" width="1040" height="466"/>
+                    {% endthumbnail %}
+                    <div class="promo_img_fr"></div>
+                    <div class="promo_img_h" style="color: #562d01;">О, горы</div>
+                    <div class="promo_nums" style="color: #562d01;">
+                        <div class="promo_num_1">
+                            <div class="promo_num_val">3776</div>
+                            <div class="promo_num_name">метров над уровнем моря</div>
+                        </div>
+                        <div class="promo_num_2">
+                            <div class="promo_num_val">4501</div>
+                            <div class="promo_num_name">метров в секунду</div>
+                        </div>
+                        <div class="promo_num_2">
+                            <div class="promo_num_val">509</div>
+                            <div class="promo_num_name">паскалей</div>
+                        </div>
+                    </div>
+                </div><!--/promo_img-->
+            {% endfor %}
+
+  			<div class="promo_l col">
+                {% for slide in tour.get_tour_slider_images %}
+                    <div class="promo_map promo_map_slider" {% if not forloop.first %}style="display: none;"{% endif %}>
+                        <img src="{{ slide.get_map_cropimg_url }}" alt="" width="225" height="225"/>
+                        <div class="promo_map_name">{{ slide.map_title }}</div>
+                        <div class="promo_map_des">{{ slide.map_subtitle }}</div>
+                        {% comment %}<div class="promo_map_lnk"><img src="/media/img/flags/jp.png" alt="" /><a href="#">О Японии</a></div>{% endcomment %}
+                    </div><!--/promo_map-->
+                {% endfor %}
+  				<!--<div class="promo_note">
+  					<p><img src="/media/images/promo_note.jpg" alt="" /></p>
+  					<h2>Самая известная винодельческая страна в мире.</h2>
+  					<p>Вино здесь стали делать еще со времен нашествия римлян. Кстати, 72 % французов с трудом разбираются в многочисленных винных производителях, ибо только у Бордо их более 9000 разновидностей</p>
+  				</div>--><!--/promo_note-->
+  			</div><!--/promo_l-->
+
+  			<div class="promo_r col">
+  				<div class="promo_text text">
+  					{{ tour.description|safe }}
+  				</div>
+  			</div><!--/promo_r-->
+
+  			<div class="promo_photos">
+                <div class="promo_photos_l">
+                    {% for photo in left_attached_photos %}
+                      {% if forloop.counter > 15 %}
+                          {% thumbnail photo.image "1000" upscale=0 as big %}
+                              <a href="{{ big.url }}" style="display: none;" rel="{{ tour.id }}" class="fancybox-thumb"></a>
+                          {% endthumbnail %}
+                      {% else %}
+                          {% thumbnail photo.image "1000" upscale=0 as big %}
+                          {% thumbnail photo.image "38x38" crop="center" as im %}
+                              <a href="{{ big.url }}" rel="{{ tour.id }}" class="fancybox-thumb"><img src="{{ im.url }}" width="38" height="38" alt="" /></a>
+                          {% endthumbnail %}
+                          {% endthumbnail %}
+                      {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="promo_photos_r">
+                    {% for photo in right_attached_photos %}
+                      {% thumbnail photo.image "1000" upscale=0 as big %}
+                      {% thumbnail photo.image "38x38" crop="center" as im %}
+                        <a href="{{ big.url }}" rel="{{ tour.id }}" class="fancybox-thumb"><img src="{{ im.url }}" width="38" height="38" alt="" /></a>
+                      {% endthumbnail %}
+                      {% endthumbnail %}
+                    {% endfor %}
+                </div>
+  			</div><!--/promo_photos-->
+  		</div><!--/promo-->
+
+    <div class="timeline">
+        <div class="timeline_start">
+            <div class="start_date col"><span>Старт</span> {{ tour.start_date|date:"j E" }}</div>
+            <div class="start_text col">{{ tour.start_date_text }}</div>
+            <div class="start_tail"></div>
+        </div><!--/timeline_start-->
+        <div class="timeline_days">
+
+            {% if tour.first_day_number %}
+                <div class="timeline_day">
+                    <div class="timeline_day_title">{{ tour.first_day_number }} день</div>
+                    <div class="timeline_day_img">
+                        {% thumbnail tour.first_day_image "81x81" crop="center" as im %}
+                            <img src="{{ im.url }}" width="81" height="81" alt="" />
+                        {% endthumbnail %}
+                        <div class="timeline_day_img_fr"></div>
+                    </div>
+                    <div class="timeline_day_name">{{ tour.first_day_title }}</div>
+                </div>
+            {% endif %}
+
+            {% if tour.second_day_number %}
+                <div class="timeline_day">
+                    <div class="timeline_day_title">{{ tour.second_day_number }} день</div>
+                    <div class="timeline_day_img">
+                        {% thumbnail tour.second_day_image "81x81" crop="center" as im %}
+                            <img src="{{ im.url }}" width="81" height="81" alt="" />
+                        {% endthumbnail %}
+                        <div class="timeline_day_img_fr"></div>
+                    </div>
+                    <div class="timeline_day_name">{{ tour.second_day_title }}</div>
+                </div>
+            {% endif %}
+
+            {% if tour.third_day_number %}
+                <div class="timeline_day">
+                    <div class="timeline_day_title">{{ tour.third_day_number }} день</div>
+                    <div class="timeline_day_img">
+                        {% thumbnail tour.third_day_image "81x81" crop="center" as im %}
+                            <img src="{{ im.url }}" width="81" height="81" alt="" />
+                        {% endthumbnail %}
+                        <div class="timeline_day_img_fr"></div>
+                    </div>
+                    <div class="timeline_day_name">{{ tour.third_day_title }}</div>
+                </div>
+            {% endif %}
+
+        </div><!--/timeline_days-->
+        {% if first_day_number or second_day_number or third_day_number %}
+            <div class="timeline_finish">Финиш</div>
+        {% endif %}
+    </div><!--/timeline-->
+
+    <div class="tour_info">
+        <div class="tour_info_l col">
+            {% if hotel %}
+                <div class="tour_hotel">
+                    <h2>Размещение в отеле</h2>
+                    {% thumbnail hotel.image_main "199x135" crop="center" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
+                    {% endthumbnail %}
+
+                    <div class="tour_hotel_des">
+                        <h3 class="tour_hotel_name">{{ hotel.title }}</h3>
+                        {{ hotel.short_description|safe }}
+                    </div>
+                    <div class="cl"></div>
+                    {% if other_hotels %}
+                        <div class="other_hotels_lnk"><a href="#">Другие отели</a></div>
+                    {% endif %}
+                </div><!--/tour_hotel-->
+            {% endif %}
+        </div><!--/tour_info_l-->
+
+        <div class="tour_info_r col">
+            <div class="for_tourist_zl">
+                {% for_tourists_menu 'title' %}
+
+                <div class="pl_t"><img src="/media/img/pl_t.png" alt="" /></div>
+                <div class="pl_r"><img src="/media/img/pl_r.png" alt="" /></div>
+                <div class="pl_b"><img src="/media/img/pl_b.png" alt="" /></div>
+                <div class="pl_l"><img src="/media/img/pl_l.png" alt="" /></div>
+            </div><!--/for_tourist_zl-->
+        </div><!--/tour_info_r-->
+    </div><!--/tour_info-->
+
+    {% if other_hotels %}
+        <div class="tour_other_hotels_out" style="display: none;">
+        <div class="tour_other_hotels">
+            <ul>
+                {% for other_hotel in other_hotels %}
+                    <li>
+                        <div class="tour_other_hotels_slide">
+                            {% thumbnail other_hotel.image_main "199x135" crop="center" as im %}
+                                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="" />
+                            {% endthumbnail %}
+                            <h3><a href="{{ other_hotel.get_absolute_url }}">{{ other_hotel.title }}</a></h3>
+                            {% if other_hotel.price %}
+                                <div class="tour_other_hotels_price">от <span class="tour_other_hotels_price_val">{{ other_hotel.price }}</span> <span class="r">руб.</span></div>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div><!--/tour_other_hotels-->
+        </div>
+    {% endif %}
+
+    <div class="tour_order">
+        <div class="tour_order_price">
+            <span class="tour_order_price_name">Цена тура</span>
+            <span class="tour_order_price_val">{{ tour.get_str_price }}</span>
+            <span class="tour_order_price_r">руб.</span>
+        </div>
+        <div class="tour_order_btn">
+            <div class="btn1"><div class="btn1_in"><a class="fancybox fancybox.ajax" href="/prepare_order/{{ tour.id }}/none/">Оформить заявку</a></div></div>
+        </div>
+    </div><!--/tour_order-->
+{% endblock %}

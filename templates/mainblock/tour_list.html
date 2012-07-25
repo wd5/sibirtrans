@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% load thumbnail pages_extras pagination_tags %}
+
+{% block title %}
+    Наши туры &mdash;
+{% endblock %}
+
+{% block header_menu %}
+    <div class="h_group">
+        <div class="btn1"><div class="btn1_in"><a class="fancybox fancybox.ajax" href="/prepare_order/none/none/">Оформить заявку</a></div></div>
+        <h1>Наши туры</h1>
+        <div class="h_group_lnk"><a href="{% url hotels %}">отели</a></div>
+    </div>
+
+    <div class="tours_menu">
+        <ul>
+            <li class="tours_menu_1 {% if type == 'None' or not type %}curr{% endif %}"><a href="#" name="all"><span>Все туры</span></a></li>
+            <li class="tours_menu_2 {% if type == 'exclusive' %}curr{% endif %}"><a href="#" name="exclusive"><span>эксклюзивные</span></a></li>
+            <li class="tours_menu_3 {% if type == 'health' %}curr{% endif %}"><a href="#" name="health"><span>лечебные</span></a></li>
+            <li class="tours_menu_4 {% if type == 'hot' %}curr{% endif %}"><a href="#" name="hot"><span>горящие</span></a></li>
+        </ul>
+    </div><!--/tours_menu-->
+{% endblock %}
+
+{% block main %}
+    {% if item_first %}
+        <div class="item_first">
+            <div class="item_first_img">
+                {% thumbnail item_first.image_main "450x243" crop="center" as im %}
+                    <img src="{{ im.url }}" alt="" width="450" height="243"/>
+                {% endthumbnail %}
+                <a class="item_first_img_fr" href="#"></a>
+            </div>
+            <div class="item_first_des">
+                <h2 class="item_first_h"><a href="{{ item_first.get_absolute_url }}">{{ item_first.title }}</a></h2>
+                <div class="item_first_country">
+                    {% for country in item_first.get_countries %}
+                        <a href="{{ country.get_absolute_url }}">{{ country.title }}</a>
+                    {% endfor %}
+                </div>
+                <div class="item_first_price">{{ item_first.get_str_price }} <span class="r">руб.</span></div>
+                <div class="item_first_time">
+                    <div>Вылет</div>
+                    <div class="item_first_time_val">{{ item_first.start_date|date:"j E Y" }}</div>
+                </div>
+            </div>
+        </div><!--/item_first-->
+    {% endif %}
+    {{ id }}
+    <div class="items">
+        {% if tours %}
+            <div class="items_filters">
+                <div class="price_filter">
+                    <h3>Цена</h3>
+                    <div>до <input class="price_filter_input" type="text" /> руб.</div>
+                    <div id="price_filter_slider"></div>
+                    <div>В стоймость тура не&nbsp;включен перелет</div>
+                </div>
+
+                <div class="hotel_filter">
+                    <h3>Отель</h3>
+                    <div class="stars">
+                        <div class="star star_full"></div>
+                        <div class="star star_empty"></div>
+                        <div class="star star_empty"></div>
+                        <div class="star star_empty"></div>
+                        <div class="star star_empty"></div>
+                    </div>
+                    <div id="hotel_filter_slider"></div>
+                </div>
+            </div><!--/items_filters-->
+            <script type="text/javascript">
+                SetPriceSlider({{ min_price|floatformat:0 }},{{ max_price|floatformat:0 }},{{ max_price|floatformat:0 }});
+            </script>
+        {% endif %}
+
+        <div class="items_catalog load_block">
+
+            {% for tour in tours %}
+                <div class="item">
+                    <div class="item_img">
+                        {% thumbnail tour.image_main "260x210" crop="center" as im %}
+                            <img src="{{ im.url }}" width="260" height="210" alt="" />
+                        {% endthumbnail %}
+                        <a class="item_img_fr item_img_fr_{% cycle '1' '2' '3' '4' '5' '6' %}" href="{{ tour.get_absolute_url }}"></a>
+                    </div>
+                    <div class="item_des">
+                        <h3><a href="{{ tour.get_absolute_url }}">{{ tour.title }}</a></h3>
+                        <div class="item_country">
+                            {% for country in tour.get_countries %}
+                                <a href="{{ country.get_absolute_url }}">{{ country.title }}</a>
+                            {% endfor %}
+                        </div>
+                        <div class="item_price">{{ tour.get_str_price }} <span class="r">руб.</span></div>
+                    </div>
+                </div>
+            {% empty %}
+                Ни одного тура пока не добавлено.
+            {% endfor %}
+
+
+
+            {% if next_id_loaded_items %}
+
+                <div class="pgn load_page">
+
+                    <input type="hidden" id="all_loaded_ids" value="{{ next_id_loaded_items|join:'|' }}" />
+
+                    {% if page_prev %}
+                        <a class="pgn_prev" href="#" name="{{ page_prev }}">«</a>
+                    {% endif %}
+
+                    {% for loaded_ids in next_id_loaded_items %}
+                        {% ifequal loaded_ids curr_ids %}
+                            <a class="curr pgn_num_page" href="#" name="{{ loaded_ids }}">{{ forloop.counter }}</a>
+                        {% else %}
+                            <a class="pgn_num_page" href="#" name="{{ loaded_ids }}" {% if forloop.counter > 5 %}style="display: none;" {% endif %}>{{ forloop.counter }}</a>
+                        {% endifequal %}
+                    {% endfor %}
+
+                    {% if page_next %}
+                        <a class="pgn_next" href="#" name="{{ page_next }}">»</a>
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div><!--/items-->
+{% endblock %}

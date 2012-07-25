@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% load thumbnail siteblocks_extras pagination_tags pages_extras %}
+
+
+{% block title %}
+    {{ country.title }} &mdash;
+{% endblock %}
+
+
+{% block header_contacts %}
+{% endblock %}
+
+{% block header_menu %}
+    <h1>{{ country.title }}</h1>
+
+    <div class="breadcrumbs"><a href="{% url countries %}">Страны</a></div>
+{% endblock %}
+
+{% block main %}
+    <div class="promo">
+  			<div class="promo_img">
+                {% thumbnail country.image_main "1040x466" crop="center" as im %}
+                    <img src="{{ im.url }}" alt="" width="1040" height="466"/>
+                {% endthumbnail %}
+  				<div class="promo_img_fr"></div>
+  				<div class="promo_img_h" style="color: {{ country.image_main_title_colorpicker }};">{{ country.image_main_title }}</div>
+  				<div class="promo_nums" style="color: {{ country.interesting_facts_colorpicker }};">
+                    {% for fact in country.get_facts %}
+                        <div class="{% if forloop.counter == 1 %}promo_num_1{% else %}promo_num_2{% endif %}">
+                            <div class="promo_num_val">{{ fact.value }}</div>
+                            <div class="promo_num_name">{{ fact.title }}</div>
+                        </div>
+                    {% endfor %}
+  				</div>
+  			</div><!--/promo_img-->
+
+  			<div class="promo_l col">
+  				<div class="promo_map">
+                    <img src="{{ country.get_map_cropimg_url }}" alt="" width="225" height="225"/>
+  					<div class="promo_map_name">{{ country.map_title }}</div>
+  					<div class="promo_map_des">{{ country.map_subtitle }}</div>
+  				</div><!--/promo_map-->
+
+  				<div class="promo_note">
+  					<p>
+                    {% thumbnail country.image_other "238x149" crop="center" as im %}
+                        <img src="{{ im.url }}" alt="" width="239" height="149" />
+                    {% endthumbnail %}
+                    </p>
+                    {{ country.image_other_description|safe }}
+  				</div><!--/promo_note-->
+  			</div><!--/promo_l-->
+
+  			<div class="promo_r col">
+  				<div class="promo_text text">
+  					{{ country.description|safe }}
+  				</div>
+  			</div><!--/promo_r-->
+
+  			<div class="promo_photos">
+  				<div class="promo_photos_l">
+                    {% for photo in left_attached_photos %}
+                        {% if forloop.counter > 15 %}
+                            {% thumbnail photo.image "1000" upscale=0 as big %}
+                                <a href="{{ big.url }}" style="display: none;" rel="{{ country.id }}" class="fancybox-thumb"></a>
+                            {% endthumbnail %}
+                        {% else %}
+                            {% thumbnail photo.image "1000" upscale=0 as big %}
+                            {% thumbnail photo.image "38x38" crop="center" as im %}
+                                <a href="{{ big.url }}" rel="{{ country.id }}" class="fancybox-thumb"><img src="{{ im.url }}" width="38" height="38" alt="" /></a>
+                            {% endthumbnail %}
+                            {% endthumbnail %}
+                        {% endif %}
+                    {% endfor %}
+  				</div>
+  				<div class="promo_photos_r">
+                    {% for photo in right_attached_photos %}
+                        {% thumbnail photo.image "1000" upscale=0 as big %}
+                        {% thumbnail photo.image "38x38" crop="center" as im %}
+                          <a href="{{ big.url }}" rel="{{ country.id }}" class="fancybox-thumb"><img src="{{ im.url }}" width="38" height="38" alt="" /></a>
+                        {% endthumbnail %}
+                        {% endthumbnail %}
+                    {% endfor %}
+  				</div>
+  			</div><!--/promo_photos-->
+  		</div><!--/promo-->
+
+    <div class="hotel_l col">
+        <div class="for_tourist">
+            {% for_tourists_menu 'title' %}
+
+            <div class="pl_t"><img src="/media/img/pl_t.png" alt="" /></div>
+            <div class="pl_r"><img src="/media/img/pl_r.png" alt="" /></div>
+            <div class="pl_b"><img src="/media/img/pl_b.png" alt="" /></div>
+            <div class="pl_l"><img src="/media/img/pl_l.png" alt="" /></div>
+        </div><!--/for_tourist_zl-->
+    </div>
+
+    <div class="hotel_r col">
+        <div class="items">
+            {% if pop_tours %}
+                <h2>Популярные туры</h2>
+                {% for tour in pop_tours %}
+                    <div class="item">
+                        <div class="item_img">
+                            {% thumbnail tour.image_main "260x210" crop="center" as im %}
+                                <img src="{{ im.url }}" width="260" height="210" alt="" />
+                            {% endthumbnail %}
+                            <a class="item_img_fr item_img_fr_{{ forloop.counter }}" href="{{ tour.get_absolute_url }}"></a>
+                        </div>
+                        <div class="item_des">
+                            <h3><a href="{{ tour.get_absolute_url }}">{{ tour.title }}</a></h3>
+                            <div class="item_price">{{ tour.get_str_price }}<span class="r">руб.</span></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+
+
+            <div class="items_all_lnk"><a href="/tours/?by_country={{ country.id }}">Все туры по {{ country.second_title }}</a></div>
+        </div><!--/tours-->
+    </div>
+{% endblock %}

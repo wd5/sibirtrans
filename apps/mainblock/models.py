@@ -17,6 +17,7 @@ def file_path_countryFlags(instance, filename):
 
 class Country(models.Model):
     title = models.CharField(verbose_name = u'название', max_length = 100)
+    second_title = models.CharField(verbose_name = u'название страны в ссылках', max_length = 100, help_text='Например для ссылки "Все туры по ..."')
     icon = ImageField(verbose_name=u'иконка флага', upload_to=file_path_countryFlags)
     image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_countryImage)
     image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
@@ -25,6 +26,7 @@ class Country(models.Model):
     map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_countryImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
     map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50, blank=True)
+    #map_text_colorpicker = models.CharField(verbose_name = u'цвет подписи к карте', max_length = 7, blank=True)
     description = models.TextField(verbose_name = u'описание',)
     image_other = ImageField(verbose_name=u'дополнительное изображение', upload_to=file_path_countryImage, blank=True)
     image_other_description = models.TextField(verbose_name = u'описание под дополнительным изображением', blank=True)
@@ -46,6 +48,12 @@ class Country(models.Model):
 
     def get_facts(self):
         return self.fact_country.all()
+
+    def get_tours(self):
+        return self.tour_set.published()
+
+    def get_pop_tours(self):
+        return self.tour_set.published().filter(is_popular=True)
 
     def get_absolute_url(self):
         return u'/countries/%s/' % self.id
@@ -110,6 +118,7 @@ def file_path_hotelImage(instance, filename):
 class Hotel(models.Model):
     country = models.ForeignKey(Country, verbose_name=u'страна')
     title = models.CharField(verbose_name = u'название', max_length = 100)
+    price = models.CharField(verbose_name=u'цена', max_length = 100, blank=True)
     image_main = ImageField(verbose_name=u'главное изображение', upload_to=file_path_hotelImage)
     image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
     image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
@@ -117,6 +126,7 @@ class Hotel(models.Model):
     map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_hotelImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
     map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50, blank=True)
+    #map_text_colorpicker = models.CharField(verbose_name = u'цвет подписи к карте', max_length = 7, blank=True)
     description = models.TextField(verbose_name = u'описание',)
     short_description = models.TextField(verbose_name = u'краткое описание',)
     conditions_text = models.TextField(verbose_name = u'условия проживания',)
@@ -141,8 +151,19 @@ class Hotel(models.Model):
     def get_orders(self):
         return self.order_set_hotel.all()
 
+    def get_absolute_url(self):
+        return u'/hotels/%s/' % self.id
+
     def get_facts(self):
         return self.fact_hotel.all()
+
+    def get_services(self):
+        return self.service.all()
+
+    def get_map_cropimg_url(self):
+        file, ext = os.path.splitext(self.map_image.url)
+        url = file + "_crop.png"
+        return url
 
 post_save.connect(pre_crop_map, sender=Hotel)
 
@@ -202,6 +223,7 @@ class Tour(models.Model):
     country = models.ManyToManyField(Country, verbose_name=u'страна')
     hotel = models.ManyToManyField(Hotel, verbose_name=u'отель')
     title = models.CharField(verbose_name = u'название', max_length = 100)
+    image_main = ImageField(verbose_name=u'изображение для тура', upload_to=file_path_tourImage)
     description = models.TextField(verbose_name = u'описание',)
     price = models.DecimalField(verbose_name=u'цена', decimal_places=2, max_digits=10)
     stars = IntegerRangeField(verbose_name=u'количество звёзд 1-5', min_value=1, max_value=5, blank=True, null=True)
@@ -221,6 +243,7 @@ class Tour(models.Model):
     third_day_title = models.CharField(verbose_name = u'название для третьего дня', max_length = 50, blank=True)
     third_day_image = ImageField(verbose_name=u'изображение для третьего дня', upload_to=file_path_tourImage, blank=True)
 
+    is_popular = models.BooleanField(verbose_name = u'популярный тур', default=False)
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
 
@@ -243,6 +266,12 @@ class Tour(models.Model):
     def get_orders(self):
         return self.order_set_tour.all()
 
+    def get_countries(self):
+        return self.country.all()
+
+    def get_hotels(self):
+        return self.hotel.all()
+
     def get_str_price(self):
         result = str_price(self.price)
         return result
@@ -251,7 +280,7 @@ class Tour(models.Model):
         return self.country.all()
 
     def get_absolute_url(self):
-        return u'/tours/%s/%s/' % (self.type,self.id)
+        return u'/tours/%s/' % self.id
 
 class TourImage(models.Model):
     tour = models.ForeignKey(Tour, verbose_name=u'тур')
@@ -275,6 +304,7 @@ class TourImageSlider(models.Model):
     map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_tourImage)
     map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
     map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50, blank=True)
+    #map_text_colorpicker = models.CharField(verbose_name = u'цвет подписи к карте', max_length = 7, blank=True)
 
     order = models.IntegerField(verbose_name=u'Порядок сортировки',default=10)
     is_published = models.BooleanField(verbose_name = u'Опубликовано', default=True)
@@ -291,6 +321,11 @@ class TourImageSlider(models.Model):
 
     def get_facts(self):
         return self.fact_tour_is.all()
+
+    def get_map_cropimg_url(self):
+        file, ext = os.path.splitext(self.map_image.url)
+        url = file + "_crop.png"
+        return url
 
 post_save.connect(pre_crop_map, sender=TourImageSlider)
 
@@ -337,7 +372,7 @@ class AdvertasingOnMain(models.Model):
 class Order(models.Model):
     fullname = models.CharField(verbose_name = u'полное имя', max_length = 100)
     contacts = models.TextField(verbose_name = u'контактные данные')
-    note = models.TextField(verbose_name = u'дополнительная информация')
+    note = models.TextField(verbose_name = u'дополнительная информация', blank=True)
     tour = models.ForeignKey(Tour, verbose_name=u'тур', blank=True, null=True, related_name='order_set_tour')
     hotel = models.ForeignKey(Hotel, verbose_name=u'отель', blank=True, null=True, related_name='order_set_hotel')
     create_date = models.DateTimeField(verbose_name=u'Дата оформления', default=datetime.datetime.now)

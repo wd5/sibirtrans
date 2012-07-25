@@ -76,7 +76,7 @@ class CountryAdmin(AdminImageMixin, admin.ModelAdmin):
     form = CountryAdminForm
     fieldsets = (
             (None, {
-                'fields': ('title','icon',)
+                'fields': ('title','second_title','icon',)
             }),
             ('Главное изображение', {
                 'classes': ('collapse',),
@@ -133,7 +133,7 @@ class HotelAdmin(AdminImageMixin, admin.ModelAdmin):
     form = HotelAdminForm
     fieldsets = (
             (None, {
-                'fields': ('country','title',)
+                'fields': ('country','title','price',)
             }),
             ('Главное изображение', {
                 'classes': ('collapse',),
@@ -175,7 +175,7 @@ class TourAdmin(AdminImageMixin, admin.ModelAdmin):
     inlines = [TourImageInline,]
     fieldsets = (
                 (None, {
-                    'fields': ('title','description','price','stars','type',)
+                    'fields': ('title','image_main','description','price','stars','type',)
                 }),
                 ('Блок стартовой черты', {
                     'classes': ('collapse',),
@@ -194,7 +194,7 @@ class TourAdmin(AdminImageMixin, admin.ModelAdmin):
                     'fields': ('third_day_number','third_day_title','third_day_image',)
                 }),
                 (None, {
-                    'fields': ('country','hotel','order','is_published',)
+                    'fields': ('country','hotel','is_popular','order','is_published',)
                 }),
             )
 

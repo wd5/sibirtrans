@@ -1,0 +1,9 @@
+<form class="order_form" method="post" action="">
+	<div class="input"><label>Ваше имя</label>{{ form.fullname }}{{ form.fullname.errors }}</div>
+	<div class="input"><label>Контактные данные</label>{{ form.contacts }}{{ form.contacts.errors }}</div>
+	<div class="textarea"><label>Комментарий к заказу</label>{{ form.note }}{{ form.note.errors }}</div>
+	<div class="btn1"><div class="btn1_in"><input type="button" name="" id="send_order" value="Оформить заявку" /></div></div>
+    <div>{{ form.hotel }}{{ form.hotel.errors }}
+    {{ form.tour }}{{ form.tour.errors }}</div>
+</form>
+

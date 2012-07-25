@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load thumbnail pages_extras pagination_tags %}
+
+{% block title %}
+    Страны &mdash;
+{% endblock %}
+
+{% block header_menu %}
+    <div class="h_group">
+        <div class="btn1"><div class="btn1_in"><a class="fancybox fancybox.ajax" href="/prepare_order/none/none/">Оформить заявку</a></div></div>
+        <h1>Страны</h1>
+        {% comment %}<div class="h_group_lnk"><a href="#">отели</a></div>{% endcomment %}
+    </div>
+{% endblock %}
+
+{% block main %}
+    <div class="items">
+        {% autopaginate countries 12 %}
+        {% for country in countries %}
+            <div class="item">
+                <div class="item_img">
+                    {% thumbnail country.image_main "260x210" crop="center" as im %}
+                        <img src="{{ im.url }}" width="260" height="210" alt="" />
+                    {% endthumbnail %}
+                    <a class="item_img_fr item_img_fr_{% cycle '1' '2' '3' '4' '5' '6' %}" href="{{ country.get_absolute_url }}"></a>
+                </div>
+                <div class="item_des">
+                    <h3><a href="{{ country.get_absolute_url }}">{{ country.title }}</a></h3>
+                    {% comment %}<div class="item_country"><a href="#">Сейшелы</a></div>
+                    <div class="item_price">14 150 <span class="r">руб.</span></div>{% endcomment %}
+                </div>
+            </div>
+        {% empty %}
+            Ни одной страны пока не добавлено.
+        {% endfor %}
+        {% paginate %}
+    </div><!--/items-->
+{% endblock %}

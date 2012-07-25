@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load thumbnail siteblocks_extras %}
+{% load thumbnail siteblocks_extras pages_extras pagination_tags %}
 
 {% if page.title %}
     {% block title %}
@@ -19,13 +19,7 @@
     <div class="for_tourist_page">
         <div class="tourist_l col">
             <div class="for_tourist">
-                <div class="for_tourist_menu">
-                    <ul>
-                        {% for child in page.get_children %}
-                            <li><a href="{{ child.get_absolute_url }}">{{ child.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                {% for_tourists_menu '' %}
 
                 <div class="pl_t"><img src="/media/img/pl_t.png" alt="" /></div>
                 <div class="pl_r"><img src="/media/img/pl_r.png" alt="" /></div>
@@ -39,20 +33,27 @@
                 <form class="faq_form" method="post" action="">
                     <div class="textarea">{{ form.question }}</div>
                     <div class="input">{{ form.email }}</div>
-                    <div class="btn1"><div class="btn1_in"><input type="submit" name="" value="Задать вопрос" id="send_question"/></div></div>
+                    <div class="btn1"><div class="btn1_in"><input id="send_question" type="button" name="" value="Задать вопрос"/></div></div>
+                    <div id="result_text"></div>
                 </form>
                 {% if questions %}
+                    {% autopaginate questions 4 %}
                     {% for question in questions %}
                         <div class="faq">
                             <div class="question">
                                 <div class="faq_text"><p>{{ question.question }}</p></div>
                             </div>
-                            <div class="answer">
-                                <div class="faq_author">{{ question.author }}, {{ question.ans_date|date:"j E Y" }}</div>
-                                <div class="faq_text"><p>{{ question.answer }}</p></div>
-                            </div>
+                            {% if question.answer %}
+                                <div class="answer">
+                                    <div class="faq_author">{{ question.author }}, {{ question.ans_date|date:"j E Y" }}</div>
+                                    <div class="faq_text"><p>{{ question.answer }}</p></div>
+                                </div>
+                            {% endif %}
                         </div>
+                    {% empty %}
+                        Вопросов пока нет.
                     {% endfor %}
+                    {% paginate %}
                 {% endif %}
             </div><!--/faqs-->
 

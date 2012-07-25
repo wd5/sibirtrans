@@ -1,0 +1,12 @@
+<p><h2>{{ site_name }} - Новая заявка №{{ saved_object.id }}</h2>
+<p>Дата добавления: {{ saved_object.create_date }}</p>
+<p>Полное имя: {{ saved_object.fullname }}</p>
+<p>Контактные данные: {{ saved_object.contacts }}</p>
+<p>Примечание: {{ saved_object.note }}</p>
+{% if saved_object.hotel %}
+    <p>Отель: {{ saved_object.hotel.title }}</p>
+{% endif %}
+{% if saved_object.tour %}
+    <p>Тур: {{ saved_object.tour.title }}</p>
+{% endif %}
+</p>
