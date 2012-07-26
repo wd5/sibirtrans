@@ -46,7 +46,7 @@ def SaveQuestionForm(request):
         faq_form = QuestionForm(data)
         if faq_form.is_valid():
             saved_object = faq_form.save()
-            subject = u'%s - Новый вопрос.' % settings.SITE_NAME
+            subject = u'%s - Новый вопрос' % settings.SITE_NAME
             subject = u''.join(subject.splitlines())
             message = render_to_string(
                 'faq/admin_message_template.html',
