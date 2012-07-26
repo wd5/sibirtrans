@@ -159,10 +159,10 @@ $(function() {
 
     $('.hotel_conditions_lnk a').toggle(
         function () {
-            $('.hotel_condition_text').hide('fast');
+            $('.hotel_condition_text').show('fast');
         },
         function () {
-            $('.hotel_condition_text').show('fast');
+            $('.hotel_condition_text').hide('fast');
         }
     );
 

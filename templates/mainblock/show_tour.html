@@ -31,20 +31,14 @@
                         <img src="{{ im.url }}" alt="" width="1040" height="466"/>
                     {% endthumbnail %}
                     <div class="promo_img_fr"></div>
-                    <div class="promo_img_h" style="color: #562d01;">О, горы</div>
-                    <div class="promo_nums" style="color: #562d01;">
-                        <div class="promo_num_1">
-                            <div class="promo_num_val">3776</div>
-                            <div class="promo_num_name">метров над уровнем моря</div>
-                        </div>
-                        <div class="promo_num_2">
-                            <div class="promo_num_val">4501</div>
-                            <div class="promo_num_name">метров в секунду</div>
-                        </div>
-                        <div class="promo_num_2">
-                            <div class="promo_num_val">509</div>
-                            <div class="promo_num_name">паскалей</div>
-                        </div>
+                    <div class="promo_img_h" style="color: {{ slide.image_main_title_colorpicker }};">{{ slide.image_main_title }}</div>
+                    <div class="promo_nums" style="color: {{ slide.interesting_facts_colorpicker }};">
+                        {% for fact in slide.get_facts %}
+                            <div class="{% if forloop.counter == 1 %}promo_num_1{% else %}promo_num_2{% endif %}">
+                                <div class="promo_num_val">{{ fact.value }}</div>
+                                <div class="promo_num_name">{{ fact.title }}</div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div><!--/promo_img-->
             {% endfor %}

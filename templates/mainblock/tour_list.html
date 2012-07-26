@@ -30,7 +30,7 @@
                 {% thumbnail item_first.image_main "450x243" crop="center" as im %}
                     <img src="{{ im.url }}" alt="" width="450" height="243"/>
                 {% endthumbnail %}
-                <a class="item_first_img_fr" href="#"></a>
+                <a class="item_first_img_fr" href="{{ item_first.get_absolute_url }}"></a>
             </div>
             <div class="item_first_des">
                 <h2 class="item_first_h"><a href="{{ item_first.get_absolute_url }}">{{ item_first.title }}</a></h2>

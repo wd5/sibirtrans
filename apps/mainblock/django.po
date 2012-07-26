@@ -20,7 +20,7 @@ msgid "service"
 msgstr "изображение"
 
 msgid "services"
-msgstr "излображения сервисов"
+msgstr "изображения сервисов"
 
 msgid "hotel"
 msgstr "отель"

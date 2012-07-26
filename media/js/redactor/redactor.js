@@ -298,10 +298,10 @@ var RTOOLBAR = {};
 		{		
 			// container
 			this.$box = $('<div class="redactor_box"></div>');				
-	
+            this.height = '260px' // todo: моё исправление
 			// frame
-			this.$frame = $('<iframe frameborder="0" scrolling="auto" style="height: ' + this.height + ';" class="redactor_frame"></iframe>');	   	
-			
+			this.$frame = $('<iframe frameborder="0" scrolling="auto" style="height: ' + this.height + ';" class="redactor_frame"></iframe>');
+
 			// hide textarea
 			this.$el.css('width', '100%').hide();
 			

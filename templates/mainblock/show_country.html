@@ -117,9 +117,9 @@
                 {% endfor %}
             {% endif %}
 
-
-
-            <div class="items_all_lnk"><a href="/tours/?by_country={{ country.id }}">Все туры по {{ country.second_title }}</a></div>
+            {% if country.get_tours %}
+                <div class="items_all_lnk"><a href="/tours/?by_country={{ country.id }}">Все туры по {{ country.second_title }}</a></div>
+            {% endif %}
         </div><!--/tours-->
     </div>
 {% endblock %}
