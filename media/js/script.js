@@ -77,7 +77,7 @@ $(function() {
         },
         stop: function(event, ui) {
             var k = $(this).slider( "option", "value" )
-            for (var i=1; i<5; ++i)
+            for (var i=1; i<6; ++i)
                 {
                     if  (i<=k)
                         {

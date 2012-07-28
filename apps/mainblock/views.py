@@ -252,7 +252,8 @@ class LoadToursView(View):
                 queryset = queryset.filter(price__lte=price_max)
 
             if max_star:
-                queryset = queryset.filter(stars__lte=max_star)
+                #queryset = queryset.filter(stars__lte=max_star)
+                queryset = queryset.filter(stars=max_star)
 
             dic = queryset.aggregate(Min('price'), Max('price'))
             max_price = dic['price__max']
