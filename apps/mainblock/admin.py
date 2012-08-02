@@ -126,7 +126,7 @@ class HotelAdminForm(forms.ModelForm):
     description = forms.CharField(widget=Redactor(attrs={'cols': 170, 'rows': 20}), label=u'Описание', )
     conditions_text = forms.CharField(widget=Redactor(attrs={'cols': 170, 'rows': 20}), label=u'Условия проживания', )
     short_description = forms.CharField(widget=Redactor(attrs={'cols': 170, 'rows': 20}), label=u'Краткое описание', )
-    map_image = forms.ImageField(widget=CropImage(attrs={'model_name': 'hotel'}), label=u'Изображение карты')
+    map_image = forms.ImageField(widget=CropImage(attrs={'model_name': 'hotel'}), label=u'Изображение карты', required=False)
 
     class Meta:
         model = Hotel

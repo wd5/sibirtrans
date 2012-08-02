@@ -32,12 +32,14 @@
   			</div><!--/promo_img-->
 
   			<div class="promo_l col">
-  				<div class="promo_map">
-                    <img src="{{ hotel.get_map_cropimg_url }}" alt="" width="225" height="225"/>
-  					<div class="promo_map_name">{{ hotel.map_title }}</div>
-  					<div class="promo_map_des">{{ hotel.map_subtitle }}</div>
-                    <div class="promo_map_lnk"><img src="{{ hotel.country.icon.url }}" alt="" /><a href="{{ hotel.country.get_absolute_url }}">О {{ hotel.country.second_title }}</a></div>
-  				</div><!--/promo_map-->
+                {% if hotel.map_image %}
+                    <div class="promo_map">
+                        <img src="{{ hotel.get_map_cropimg_url }}" alt="" width="225" height="225"/>
+                        <div class="promo_map_name">{{ hotel.map_title }}</div>
+                        <div class="promo_map_des">{{ hotel.map_subtitle }}</div>
+                        <div class="promo_map_lnk"><img src="{{ hotel.country.icon.url }}" alt="" /><a href="{{ hotel.country.get_absolute_url }}">О {{ hotel.country.second_title }}</a></div>
+                    </div><!--/promo_map-->
+                {% endif %}
   			</div><!--/promo_l-->
 
   			<div class="promo_r col">

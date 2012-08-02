@@ -66,21 +66,22 @@ class Country(models.Model):
 def pre_crop_map(sender, instance, created, **kwargs):
     from apps.utils.utils import crop_map_image_util
     from django.conf import settings
-    file, ext = os.path.splitext(instance.map_image.url)
-    url = file + "_crop.png"
-    output_size = [300, 300]
-    path = "%s%s" % (settings.ROOT_PATH, url)
-    if os.path.isfile(path):
-        pass
-    else:
-        try:
-            crop_map_image_util(
-                post=False,
-                original_img=instance.map_image,
-                output_size=output_size
-            )
-        except:
+    if  instance.map_image:
+        file, ext = os.path.splitext(instance.map_image.url)
+        url = file + "_crop.png"
+        output_size = [300, 300]
+        path = "%s%s" % (settings.ROOT_PATH, url)
+        if os.path.isfile(path):
             pass
+        else:
+            try:
+                crop_map_image_util(
+                    post=False,
+                    original_img=instance.map_image,
+                    output_size=output_size
+                )
+            except:
+                pass
 
 post_save.connect(pre_crop_map, sender=Country)
 
@@ -123,8 +124,8 @@ class Hotel(models.Model):
     image_main_title = models.CharField(verbose_name = u'подпись на главном изображении', max_length = 100, blank=True)
     image_main_title_colorpicker = models.CharField(verbose_name = u'цвет подписи на главном изображении', max_length = 7, blank=True)
     interesting_facts_colorpicker = models.CharField(verbose_name = u'цвет текста интересных фактов', max_length = 7, blank=True)
-    map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_hotelImage)
-    map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50)
+    map_image = ImageField(verbose_name=u'изображение карты', upload_to=file_path_hotelImage, blank=True)
+    map_title = models.CharField(verbose_name = u'заголовок карты', max_length = 50, blank=True)
     map_subtitle = models.CharField(verbose_name = u'подзаголовок карты', max_length = 50, blank=True)
     #map_text_colorpicker = models.CharField(verbose_name = u'цвет подписи к карте', max_length = 7, blank=True)
     description = models.TextField(verbose_name = u'описание',)
@@ -161,9 +162,12 @@ class Hotel(models.Model):
         return self.service.all()
 
     def get_map_cropimg_url(self):
-        file, ext = os.path.splitext(self.map_image.url)
-        url = file + "_crop.png"
-        return url
+        if self.map_image.url:
+            file, ext = os.path.splitext(self.map_image.url)
+            url = file + "_crop.png"
+            return url
+        else:
+            return False
 
 post_save.connect(pre_crop_map, sender=Hotel)
 
