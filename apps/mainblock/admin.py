@@ -101,7 +101,7 @@ class CountryAdmin(AdminImageMixin, admin.ModelAdmin):
             'fields': ('description',)
         }),
         ('Дополнительное изображение', {
-            'classes': ('collapse',),
+            #'classes': ('collapse',),
             'fields': ('image_other', 'image_other_description',)
         }),
         (None, {
@@ -160,7 +160,7 @@ class HotelAdmin(AdminImageMixin, admin.ModelAdmin):
             'fields': ('map_image', 'map_title', 'map_subtitle',)
         }),
         ('Описание и условия проживания', {
-            'classes': ('collapse',),
+            #'classes': ('collapse',),
             'fields': ('description', 'short_description', 'conditions_text')
         }),
         (None, {
