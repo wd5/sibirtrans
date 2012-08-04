@@ -108,11 +108,13 @@ $(function() {
     $('.promo_arr_l').live('click', function() {
         SlideToLeft();
         ScrollTourImages();
+        return false;
     });
 
     $('.promo_arr_r').live('click', function() {
         SlideToRight();
         ScrollTourImages();
+        return false;
     });
 
 
