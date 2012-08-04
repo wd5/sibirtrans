@@ -58,6 +58,65 @@ $(function() {
         return false;
     });
 
+    function SlideToLeft()
+    {
+        var el = $('.promo_arr_l')
+        var slider_imgs = $('.promo_img');
+        var slider_maps = $('.promo_map');
+        var curr_slide = el.parents('.curr_slide');
+        var curr_slide_map = $('.promo_l .curr_slide');
+        curr_slide.removeClass('curr_slide').addClass('hidden_slide')
+        curr_slide_map.removeClass('curr_slide').addClass('hidden_slide')
+        if (curr_slide.prev().html()==null)
+            {slider_imgs.last().removeClass('hidden_slide').addClass('curr_slide')
+            slider_maps.last().removeClass('hidden_slide').addClass('curr_slide')}
+        else
+            {curr_slide.prev().removeClass('hidden_slide').addClass('curr_slide')
+            curr_slide_map.prev().removeClass('hidden_slide').addClass('curr_slide')}
+    }
+
+    function SlideToRight()
+    {
+        var el = $('.promo_arr_r')
+        var slider_imgs = $('.promo_img');
+        var slider_maps = $('.promo_map');
+        var curr_slide = el.parents('.curr_slide');
+        var curr_slide_map = $('.promo_l .curr_slide');
+        curr_slide.removeClass('curr_slide').addClass('hidden_slide')
+        curr_slide_map.removeClass('curr_slide').addClass('hidden_slide')
+
+        if (curr_slide.next().html()==null)
+            {slider_imgs.first().removeClass('hidden_slide').addClass('curr_slide')
+            slider_maps.first().removeClass('hidden_slide').addClass('curr_slide')}
+        else
+            {
+            curr_slide.next().removeClass('hidden_slide').addClass('curr_slide')
+            curr_slide_map.next().removeClass('hidden_slide').addClass('curr_slide')
+            }
+    }
+
+    var myTimer = 0
+
+    function ScrollTourImages(){
+       clearInterval(myTimer);
+       myTimer = setInterval( function(){SlideToRight()} , 7000)
+       myTimer;
+    }
+
+    ScrollTourImages();
+
+    $('.promo_arr_l').live('click', function() {
+        SlideToLeft();
+        ScrollTourImages();
+    });
+
+    $('.promo_arr_r').live('click', function() {
+        SlideToRight();
+        ScrollTourImages();
+    });
+
+
+
 /*    $('.tour_other_hotels').jcarousel({
         scroll: 1,
         visible: 3,
@@ -278,26 +337,3 @@ function SetPriceSlider(min, max, start)
 	});
 	$( ".price_filter_input" ).val( start );
 }
-
-/*
-function SlideTourImage()
-{
-    var delay = 3000, fade = 1000; // tweak-able
-    var imgs = $('.promo_img_slider');
-    var map_imgs = $('.promo_map_slider');
-    var len = imgs.length;
-    var i = 0;
-
-    setTimeout(cycle, delay); // <-- start
-
-    function cycle() {
-        $(imgs[i%len]).fadeOut(fade, function() {
-            $(map_imgs[i%len]).fadeOut(fade, function() {
-                $(map_imgs[i%len]).fadeIn(fade, function() {});
-            });
-            $(imgs[++i%len]).fadeIn(fade, function() { // mod ftw
-                setTimeout(cycle, delay);
-            });
-        });
-    }
-}*/

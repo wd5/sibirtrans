@@ -623,6 +623,7 @@ input, textarea {
 	margin: 0 0 20px -32px;
 	overflow: hidden;
 }
+.hidden_slide {display: none;}
 .promo_img_fr {
 	background: url('../img/promo_img_fr.png') no-repeat;
 	width: 1042px;
@@ -634,7 +635,7 @@ input, textarea {
 .promo_img_h {
 	color: #562d01;
 	font-size: 100px;
-	line-height: 110px;
+	line-height: 100px;
 	font-weight: bold;
 	position: absolute;
 	top: 60px;
@@ -759,6 +760,33 @@ input, textarea {
 	vertical-align: top;
 	margin: 0 4px 4px 0;
 }
+
+
+
+.promo_arr_l, .promo_arr_r {
+	text-decoration: none;
+	display: block;
+	position: absolute;
+	background: url('../img/promo_arrs.png') no-repeat;
+	width: 44px;
+	height: 38px;
+}
+.promo_arr_l {
+	top: 260px;
+	left: 4px;
+}
+.promo_arr_l:active {
+	top: 262px;
+}
+.promo_arr_r {
+	background-position: 0 -48px;
+	top: 360px;
+	right: 54px;
+}
+.promo_arr_r:active {
+	top: 362px;
+}
+
 /*/promo*/
 
 
